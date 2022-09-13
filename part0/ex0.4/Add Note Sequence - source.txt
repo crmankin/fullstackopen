@@ -1,0 +1,26 @@
+title Add Note Sequence
+
+
+
+note over Browser: User enters text into "note" text input, clicks "Save" button
+note right of Browser: note={{your-message}}
+Browser->Server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+note over Server: Server stores provided note
+Server-->Browser: 302 Redirect to /exampleapp/notes
+Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+Server-->Browser: HTML content (with empty notes list)
+note over Browser:
+Browser begins rendering HTML content,
+discovers needed resources
+end note
+Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+Server-->Browser: CSS content
+Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+Server-->Browser: Javascript code
+note over Browser: Browser executes JS code that includes new request to server
+Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+Server-->Browser: [{"vxcvxcv","date":"2022-09-12T15:52:02.139Z"},{...
+note over Browser: Event handler triggered, loads data into DOM
+note over Browser: DOM updates render to the screen for User to see
+
+https://www.websequencediagrams.com/?lz=dGl0bGUgQWRkIE5vdGUgU2VxdWVuY2UKCgoKbm90ZSBvdmVyIEJyb3dzZXI6IFVzZXIgZW50ZXJzIHRleHQgaW50byAibm90ZSIACQhwdXQsIGNsaWNrcyAiU2F2ZSIgYnV0dG9uAEsGcmlnaHQgb2YASwpub3RlPXt7eW91ci1tZXNzYWdlfX0KAG0HLT5TZXJ2ZXI6IEhUVFAgUE9TVCBodHRwczovL3N0dWRpZXMuY3MuaGVsc2lua2kuZmkvZXhhbXBsZWFwcC9uZXdfbm90ZQCBQQsARwgAUQYgc3RvcmVzIHByb3ZpZGVkAIEIBQoAbQYtLT4AgXAJMzAyIFJlZGlyZWN0IHRvIABYDW90ZXMAgRkXR0UAgQItAEUFAGwSSFRNTCBjb250ZW50ICh3aXRoIGVtcHR5AII2BXMgbGlzdCkAgxwTAII8CCBiZWdpbnMgcmVuZGVyaW5nAEQNLApkaXNjb3ZlcnMgbmVlZGVkIHJlc291cmNlcwplbgCCDAcAgRtEbWFpbi5jcwCBThRDU1MAgVkIACFKagCCOBRKYXZhc2NyaXB0IGNvZACEDgwAhV0JAIIvCGV4ZWN1dGVzIEpTACcFIHRoYXQgaW5jbHVkZXMgbmV3IHJlcXVlcwCEDgVzAIUjBQCDQ0VkYXRhLmpzb24AhHcTW3sidnhjdnhjdiIsImRhdGUiOiIyMDIyLTA5LTEyVDE1OjUyOjAyLjEzOVoifSx7Li4uAIc2FEV2ZW50IGhhbmRsZXIgdHJpZ2dlcmVkLCBsb2FkcyBkYXRhAIdXBkRPTQCHdhRET00gdXBkYXRlAIRQCCB0byB0aGUgc2NyZWVuIGZvcgCIKQYAghYFZQo&s=default

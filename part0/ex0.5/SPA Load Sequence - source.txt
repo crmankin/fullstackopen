@@ -1,0 +1,24 @@
+title SPA load sequence
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
+server-->browser: HTML code
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+server-->browser: main.css
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+server-->browser: spa.js
+
+note over browser:
+browser starts executing js-code
+that requests JSON data from server 
+end note
+
+browser->server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+server-->browser: [{"content":"holaaa","date":"2022-09-13 ...
+
+note over browser:
+browser executes the event handler
+that renders notes to display
+end note
+
+
+https://www.websequencediagrams.com/?lz=dGl0bGUgU1BBIGxvYWQgc2VxdWVuY2UKCmJyb3dzZXItPnNlcnZlcjogSFRUUCBHRVQgaHR0cHM6Ly9zdHVkaWVzLmNzLmhlbHNpbmtpLmZpL2V4YW1wbGVhcHAvc3BhCgA5Bi0tPgBKBzogSFRNTCBjb2RlAB9FbWFpbi5jc3MAVhMAEgkAgQVHLmoAUhQAEgcKbm90ZSBvdmVyIACBYggAgjwIIHN0YXJ0cyBleGVjdXRpbmcganMtAIF8BXRoYXQgcmVxdWVzdHMgSlNPTiBkYXRhIGZyb20gAIJzBiAKZW5kIG5vdACCTUdkYXRhLmpzb24AgwcTW3siY29udGVudCI6ImhvbGFhYSIsImRhdGUiOiIyMDIyLTA5LTEzIC4uLgCBUx0AgWMGZXMgdGhlIGV2ZW50IGhhbmRsZXIAgWoIbmRlcnMAgVEFcyB0byBkaXNwbGF5AIFhCg&s=default

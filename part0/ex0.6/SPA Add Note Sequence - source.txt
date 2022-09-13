@@ -1,0 +1,15 @@
+title SPA Add Note Sequence
+
+note over Browser: User enters text into "note" text input, clicks "Save" button
+note over Browser:
+Browser adds note to list in JS,
+renders note to screen immediately
+end note
+note over Browser: JS sends request to server with new note
+note right of Browser: {"content":"Your message","date":"2022-09-13T12:27:38.019Z"}
+Browser->Server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+note over Server: Server stores provided note, returns confirmation message
+Server-->Browser: {"message":"note created"}
+note over Browser: Event handler triggered, logs response to console
+
+https://www.websequencediagrams.com/?lz=dGl0bGUgU1BBIEFkZCBOb3RlIFNlcXVlbmNlCgoKCm5vdGUgb3ZlciBCcm93c2VyOiBVc2VyIGVudGVycyB0ZXh0IGludG8gIm5vdGUiAAkIcHV0LCBjbGlja3MgIlNhdmUiIGJ1dHRvbgA-EwoAUwcgYWRkcyAAbAV0byBsaXN0IGluIEpTLApyZW5kZXIAEgpzY3JlZW4gaW1tZWRpYXRlbHkKZW5kADYFAIEdFEpTIHNlbmRzIHJlcXVlc3QAPgVlcnZlciB3aXRoIG5ldwAxC3JpZ2h0IG9mAIFnCnsiY29udGVudCI6IllvdXIgbWVzc2FnZSIsImRhdGUiOiIyMDIyLTA5LTEzVDEyOjI3OjM4LjAxOVoifQCBVQgtPlMAbQU6IEhUVFAgUE9TVCBodHRwczovL3N0dWRpZXMuY3MuaGVsc2lua2kuZmkvZXhhbXBsZWFwcC9uZXdfbm90ZV9zcGEAgwgLAEsIAFUGIHN0b3JlcyBwcm92aWRlAIIKBiwgcmV0dXJucyBjb25maXJtYXRpb24AgToICgCBDwYtLT4AgWILAIFWCDoAg04FIGNyZWF0ZWQifQCDeBRFdmVudCBoYW5kbGVyIHRyaWdnZXJlZCwgbG9ncyByZXNwb25zAINLBWNvbnNvbGUKCg&s=default
