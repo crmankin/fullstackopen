@@ -1,20 +1,21 @@
-const Hello = (props) => {
-  return (
-    <div>
-      <p>Hello {props.name}, you are {props.age} years old.</p>
-    </div>
-  );
-}
+import { useState } from "react";
+
+const Display = ({ counter }) => <div>{counter}</div>;
+const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
 
 const App = () => {
-  const name = "Peter";
-  const age = 10;
+  const [counter, setCounter] = useState(0);
+
+  const increaseByOne = () => setCounter(counter + 1);
+  const decreaseByOne = () => setCounter(counter - 1);
+  const setToZero = () => setCounter(0);
 
   return (
     <div>
-      <p>Greetings</p>
-      <Hello name="Maya" age={26 + 10} />
-      <Hello name={name} age={age} />
+      <Display counter={counter} />
+      <Button text="minus" onClick={decreaseByOne} />
+      <Button text="zero" onClick={setToZero} />
+      <Button text="plus" onClick={increaseByOne} />
     </div>
   );
 }
