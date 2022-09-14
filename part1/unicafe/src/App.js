@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
-
+const StatRow = ({ descr, value }) => <tr><td>{descr}:</td><td>{value}</td></tr>;
 
 const Feedback = ({incrGood, incrNeutral, incrBad}) => {
   return (
@@ -15,23 +15,21 @@ const Feedback = ({incrGood, incrNeutral, incrBad}) => {
 };
 
 const Statistics = ({good, neutral, bad}) => {
+  const total = good + neutral + bad;
+  const avg = (good - bad) / total;
+  const positivePercent = (good + neutral) / total * 100;
+
   return (
     <div>
       <h1>Statistics</h1>
       <table>
         <tbody>
-          <tr>
-            <td>Good:</td>
-            <td>{good}</td>
-          </tr>
-          <tr>
-            <td>Neutral:</td>
-            <td>{neutral}</td>
-          </tr>
-          <tr>
-            <td>Bad:</td>
-            <td>{bad}</td>
-          </tr>
+          <StatRow descr="Good" value={good} />
+          <StatRow descr="Neutral" value={neutral} />
+          <StatRow descr="Bad" value={bad} />
+          <StatRow descr="Total" value={total} />
+          <StatRow descr="Average" value={avg} />
+          <StatRow descr="Positive" value={positivePercent.toString() + '%'} />
         </tbody>
       </table>
     </div>
