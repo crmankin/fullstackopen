@@ -3,7 +3,7 @@ import { useState } from 'react';
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
 const StatRow = ({ descr, value }) => <tr><td>{descr}:</td><td>{value}</td></tr>;
 
-const Feedback = ({incrGood, incrNeutral, incrBad}) => {
+const Feedback = ({ incrGood, incrNeutral, incrBad }) => {
   return (
     <div>
       <h1>Give Feedback</h1>
@@ -14,8 +14,13 @@ const Feedback = ({incrGood, incrNeutral, incrBad}) => {
   );
 };
 
-const Statistics = ({good, neutral, bad}) => {
+const Statistics = ({ good, neutral, bad }) => {
   const total = good + neutral + bad;
+
+  if (total === 0) {
+    return (<div><h1>Statistics</h1><p>No feedback yet.</p></div>);
+  }
+
   const avg = (good - bad) / total;
   const positivePercent = (good + neutral) / total * 100;
 
