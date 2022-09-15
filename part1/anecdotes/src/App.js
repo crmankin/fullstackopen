@@ -1,5 +1,35 @@
 import { useState } from 'react';
 
+const DailyAnecdote = ({ anecdote, vote, handleVote, handleNext }) => {
+  return (
+    <div>
+      <h1>DAILY Anecdote</h1>
+      <p>{anecdote}</p>
+      <p>Has {vote} votes.</p>
+      <button onClick={handleVote}>Vote</button>
+      <button onClick={handleNext}>Next Anecdote</button>
+    </div>
+  );
+};
+
+const WinningAnecdote = ({ anecdotes, votes }) => {
+  let bestIndex = 0, bestVotes = 0;
+  for (let i = 0; i < votes.length; i++) {
+    if (votes[i] > bestVotes) {
+      bestVotes = votes[i];
+      bestIndex = i;
+    }
+  }
+
+  return (
+    <div>
+      <h1>BEST Anecdote</h1>
+      <p>{anecdotes[bestIndex]}</p>
+      <p>Has {bestVotes} votes.</p>
+    </div>
+  );
+};
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -14,7 +44,7 @@ const App = () => {
   const [selected, setSelected] = useState(0);
   const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
 
-  const handleNextAnecdote = () => {
+  const handleNext = () => {
     const choice = Math.floor(Math.random() * anecdotes.length);
     setSelected(choice);
   };
@@ -27,12 +57,9 @@ const App = () => {
 
   return (
     <div>
-      <p>{anecdotes[selected]}</p>
-      <p>Has {votes[selected]} votes.</p>
-      <button onClick={handleVote}>Vote</button>
-      <button onClick={handleNextAnecdote}>Next Anecdote</button>
+      <DailyAnecdote anecdote={anecdotes[selected]} vote={votes[selected]} handleNext={handleNext} handleVote={handleVote} />
+      <WinningAnecdote anecdotes={anecdotes} votes={votes} />
     </div>
-
   );
 };
 
