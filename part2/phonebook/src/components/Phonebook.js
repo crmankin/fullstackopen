@@ -4,7 +4,7 @@ export const Phonebook = ({ persons }) => {
 
   return (
     <ul>
-      {persons.map(p => <li key={p.name}>{p.name}</li>)}
+      {persons.map(p => <li key={p.name}>{p.name}: {p.number}</li>)}
     </ul>
   );
 };
