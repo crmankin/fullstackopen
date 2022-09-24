@@ -14,9 +14,14 @@ const App = () => {
 
   const handleAddButton = (event) => {
     event.preventDefault();
-    const newPersons = persons.concat({ name: newName });
-    setPersons(newPersons);
-    setNewName('');
+
+    if (persons.some(n => n.name === newName)) {
+      alert(`${newName} is already in the Phonebook.`);
+    } else {
+      const newPersons = persons.concat({ name: newName });
+      setPersons(newPersons);
+      setNewName('');
+    }
   };
 
   return (
