@@ -1,7 +1,7 @@
 import CountryList from "./CountryList";
 import CountryDetail from "./CountryDetail";
 
-const CountryResults = ({ data }) => {
+const CountryResults = ({ data, handleShowButton }) => {
   if (data.message) {
     return (
       <div id="CountryResults">
@@ -17,7 +17,7 @@ const CountryResults = ({ data }) => {
   } else {
     return (
       <div id="CountryResults">
-        <CountryList data={data} />
+        <CountryList data={data} handleShowButton={handleShowButton} />
       </div>
     );
   }

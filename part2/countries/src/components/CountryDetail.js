@@ -20,7 +20,7 @@ const CountryDetail = ({ country }) => {
         ))}
       </ul>
       <h3>Flag</h3>
-      <img src={country.flags.png} alt={country.name.common + " flag"} />
+      <img width="400" src={country.flags.svg} alt={country.name.common + " flag"} />
     </div>
   );
 };

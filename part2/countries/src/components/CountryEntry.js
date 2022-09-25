@@ -1,8 +1,8 @@
 
-const CountryEntry = ({country}) => {
+const CountryEntry = ({country, handleShowButton}) => {
     return (
         <div className="country-entry">
-            {country.name.common}
+            <button onClick={() => handleShowButton(country.name.common)}>show</button> {country.name.common}
         </div>
     );
 };
