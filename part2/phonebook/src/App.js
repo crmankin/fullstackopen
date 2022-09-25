@@ -1,23 +1,22 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import AddNameForm from './components/AddNameForm'
-import Phonebook from './components/Phonebook'
-import NameFilter from './components/NameFilter'
+import { useState, useEffect } from "react";
+import axios from "axios";
+import AddNameForm from "./components/AddNameForm";
+import Phonebook from "./components/Phonebook";
+import NameFilter from "./components/NameFilter";
 
-const basicChangeLister = (setFunction) => (event) => setFunction(event.target.value);
+const basicChangeListener = (setFunction) => (event) =>
+  setFunction(event.target.value);
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  const [newName, setNewName] = useState('');
-  const [newNumber, setNewNumber] = useState('');
-  const [nameFilter, setNameFilter] = useState('');
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+  const [nameFilter, setNameFilter] = useState("");
 
   const loadData = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data);
-      });
+    axios.get("http://localhost:3001/persons").then((response) => {
+      setPersons(response.data);
+    });
   };
 
   useEffect(loadData, []);
@@ -29,15 +28,25 @@ const App = () => {
   const handleAddButton = (event) => {
     event.preventDefault();
 
-    if (persons.some(n => n.name === newName)) {
+    if (persons.some((n) => n.name === newName)) {
       alert(`${newName} is already in the Phonebook.`);
     } else if (newNumber.length !== 12) {
-      alert('Phone number should be of the format: 123-456-7890');
+      alert("Phone number should be of the format: 123-456-7890");
     } else {
-      const newPersons = persons.concat({ id: persons.length + 1, name: newName, number: newNumber });
-      setPersons(newPersons);
-      setNewName('');
-      setNewNumber('');
+      const newPerson = {
+        id: persons.length + 1,
+        name: newName,
+        number: newNumber
+      };
+
+      axios
+        .post("http://localhost:3001/persons", newPerson)
+        .then((response) => {
+          setPersons(persons.concat(response.data));
+        });
+
+      setNewName("");
+      setNewNumber("");
     }
   };
 
@@ -47,15 +56,18 @@ const App = () => {
       <AddNameForm
         newName={newName}
         newNumber={newNumber}
-        handleNameChange={basicChangeLister(setNewName)}
-        handleNumberChange={basicChangeLister(setNewNumber)}
-        handleAddButton={handleAddButton} />
+        handleNameChange={basicChangeListener(setNewName)}
+        handleNumberChange={basicChangeListener(setNewNumber)}
+        handleAddButton={handleAddButton}
+      />
       <h2>Phone Book</h2>
-      <NameFilter nameFilter={nameFilter} handleNameFilterChange={handleNameFilterChange} />
+      <NameFilter
+        nameFilter={nameFilter}
+        handleNameFilterChange={handleNameFilterChange}
+      />
       <Phonebook persons={persons} nameFilter={nameFilter} />
     </div>
   );
-
 };
 
 export default App;
