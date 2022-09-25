@@ -3,6 +3,8 @@ import AddNameForm from './components/AddNameForm'
 import Phonebook from './components/Phonebook'
 import NameFilter from './components/NameFilter'
 
+const basicChangeLister = (setFunction) => (event) => setFunction(event.target.value);
+
 const App = () => {
   const [persons, setPersons] = useState([
     { id: 1, name: 'Christopher Mankin', number: '419-346-3470' },
@@ -13,14 +15,6 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [nameFilter, setNameFilter] = useState('');
-
-  const handleNameChange = (event) => {
-    setNewName(event.target.value);
-  };
-
-  const handleNumberChange = (event) => {
-    setNewNumber(event.target.value);
-  };
 
   const handleNameFilterChange = (event) => {
     setNameFilter(event.target.value.toLowerCase());
@@ -34,7 +28,7 @@ const App = () => {
     } else if (newNumber.length !== 12) {
       alert('Phone number should be of the format: 123-456-7890');
     } else {
-      const newPersons = persons.concat({ name: newName, number: newNumber });
+      const newPersons = persons.concat({ id: persons.length + 1, name: newName, number: newNumber });
       setPersons(newPersons);
       setNewName('');
       setNewNumber('');
@@ -47,8 +41,8 @@ const App = () => {
       <AddNameForm
         newName={newName}
         newNumber={newNumber}
-        handleNameChange={handleNameChange}
-        handleNumberChange={handleNumberChange}
+        handleNameChange={basicChangeLister(setNewName)}
+        handleNumberChange={basicChangeLister(setNewNumber)}
         handleAddButton={handleAddButton} />
       <h2>Phone Book</h2>
       <NameFilter nameFilter={nameFilter} handleNameFilterChange={handleNameFilterChange} />

@@ -1,3 +1,8 @@
+const PersonLine = ({ person }) => {
+  return <tr><td>{person.name}</td><td>{person.number}</td></tr>;
+};
+
+
 export const Phonebook = ({ persons, nameFilter }) => {
   if (persons.length === 0)
     return <div>Your Phonebook is currently empty.</div>
@@ -7,9 +12,11 @@ export const Phonebook = ({ persons, nameFilter }) => {
     : persons;
 
   return (
-    <ul>
-      {shownPersons.map(p => <li key={p.id}>{p.name}: {p.number}</li>)}
-    </ul>
+    <table>
+      <tbody>
+        {shownPersons.map(p => <PersonLine key={p.id} person={p} />)}
+      </tbody>
+    </table>
   );
 };
 
