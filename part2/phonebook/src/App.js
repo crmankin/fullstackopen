@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import personService from "./services/persons";
 import AddNameForm from "./components/AddNameForm";
 import Phonebook from "./components/Phonebook";
 import NameFilter from "./components/NameFilter";
@@ -13,13 +13,9 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [nameFilter, setNameFilter] = useState("");
 
-  const loadData = () => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
-    });
-  };
-
-  useEffect(loadData, []);
+  useEffect(() => {
+    personService.getAll().then((data) => setPersons(data));
+  }, []);
 
   const handleNameFilterChange = (event) => {
     setNameFilter(event.target.value.toLowerCase());
@@ -34,16 +30,13 @@ const App = () => {
       alert("Phone number should be of the format: 123-456-7890");
     } else {
       const newPerson = {
-        id: persons.length + 1,
         name: newName,
         number: newNumber
       };
 
-      axios
-        .post("http://localhost:3001/persons", newPerson)
-        .then((response) => {
-          setPersons(persons.concat(response.data));
-        });
+      personService
+        .create(newPerson)
+        .then((data) => setPersons(persons.concat(data)));
 
       setNewName("");
       setNewNumber("");
