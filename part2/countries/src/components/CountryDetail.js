@@ -1,3 +1,5 @@
+import WeatherInfo from "./WeatherInfo";
+
 const CountryDetail = ({ country }) => {
   return (
     <div className="country-detail">
@@ -21,6 +23,8 @@ const CountryDetail = ({ country }) => {
       </ul>
       <h3>Flag</h3>
       <img width="400" src={country.flags.svg} alt={country.name.common + " flag"} />
+      <h3>Weather in {country.capital}</h3>
+      <WeatherInfo lat={country.capitalInfo.latlng[0]} lon={country.capitalInfo.latlng[1]} />
     </div>
   );
 };
