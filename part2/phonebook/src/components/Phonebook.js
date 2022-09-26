@@ -1,6 +1,6 @@
 import PersonLine from "./PersonLine";
 
-export const Phonebook = ({ persons, nameFilter, handleRemoveButton }) => {
+export const Phonebook = ({ persons, nameFilter, handleEditButton, handleRemoveButton }) => {
   if (persons.length === 0)
     return <div>Your Phonebook is currently empty.</div>;
 
@@ -15,6 +15,7 @@ export const Phonebook = ({ persons, nameFilter, handleRemoveButton }) => {
           <PersonLine
             key={p.id}
             person={p}
+            handleEditButton={() => handleEditButton(p.id)}
             handleRemoveButton={() => handleRemoveButton(p.id)}
           />
         ))}

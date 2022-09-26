@@ -24,10 +24,22 @@ const App = () => {
   const handleAddButton = (event) => {
     event.preventDefault();
 
-    if (persons.some((n) => n.name === newName)) {
-      alert(`${newName} is already in the Phonebook.`);
-    } else if (newNumber.length !== 12) {
-      alert("Phone number should be of the format: 123-456-7890");
+    const existingPerson = persons.find((p) => p.name === newName);
+
+    if (existingPerson) {
+      if (existingPerson.number === newNumber) {
+        alert(`${newName} is already in the Phonebook.`);
+      } else if (
+        window.confirm(
+          `Do you want to update the number for ${existingPerson.name}?`
+        )
+      ) {
+        const newPerson = { ...existingPerson, number: newNumber };
+        personService.update(newPerson.id, newPerson).then((data) => {
+          const newPersons = persons.map((p) => (p.id === data.id ? data : p));
+          setPersons(newPersons);
+        });
+      }
     } else {
       const newPerson = {
         name: newName,
@@ -37,10 +49,15 @@ const App = () => {
       personService
         .create(newPerson)
         .then((data) => setPersons(persons.concat(data)));
-
-      setNewName("");
-      setNewNumber("");
     }
+    setNewName("");
+    setNewNumber("");
+  };
+
+  const handleEditButton = (id) => {
+    const personToEdit = persons.find((p) => p.id === id);
+    setNewName(personToEdit.name);
+    setNewNumber(personToEdit.number);
   };
 
   const handleRemoveButton = (id) => {
@@ -73,6 +90,7 @@ const App = () => {
       <Phonebook
         persons={persons}
         nameFilter={nameFilter}
+        handleEditButton={handleEditButton}
         handleRemoveButton={handleRemoveButton}
       />
     </div>
