@@ -43,6 +43,18 @@ const App = () => {
     }
   };
 
+  const handleRemoveButton = (id) => {
+    const personToRemove = persons.find((p) => p.id === id);
+    if (
+      window.confirm(`Are you sure you want to delete ${personToRemove.name}?`)
+    ) {
+      personService.remove(id).then((data) => {
+        const newPersons = persons.filter((p) => p.id !== id);
+        setPersons(newPersons);
+      });
+    }
+  };
+
   return (
     <div>
       <h2>Add to list</h2>
@@ -58,7 +70,11 @@ const App = () => {
         nameFilter={nameFilter}
         handleNameFilterChange={handleNameFilterChange}
       />
-      <Phonebook persons={persons} nameFilter={nameFilter} />
+      <Phonebook
+        persons={persons}
+        nameFilter={nameFilter}
+        handleRemoveButton={handleRemoveButton}
+      />
     </div>
   );
 };
