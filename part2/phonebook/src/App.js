@@ -47,11 +47,17 @@ const App = () => {
         )
       ) {
         const newPerson = { ...existingPerson, number: newNumber };
-        personService.update(newPerson.id, newPerson).then((data) => {
-          const newPersons = persons.map((p) => (p.id === data.id ? data : p));
-          setPersons(newPersons);
-          showNotification(`Updated ${data.name}`, "success", 5000);
-        });
+        personService.update(newPerson.id, newPerson)
+          .then((data) => {
+            const newPersons = persons.map((p) => (p.id === data.id ? data : p));
+            setPersons(newPersons);
+            showNotification(`Updated ${data.name}`, "success", 5000);
+          })
+          .catch(() => {
+            const newPersons = persons.filter((p) => p.id !== newPerson.id);
+            setPersons(newPersons);
+            showNotification(`Information on ${newPerson.name} has already been removed from the server.`, "error", 5000);
+          });
       }
     } else {
       const newPerson = {
