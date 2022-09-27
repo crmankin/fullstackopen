@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import personService from "./services/persons";
+import Notification from "./components/Notification";
 import AddNameForm from "./components/AddNameForm";
 import Phonebook from "./components/Phonebook";
 import NameFilter from "./components/NameFilter";
@@ -12,6 +13,17 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [nameFilter, setNameFilter] = useState("");
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState("");
+
+  const showNotification = (message, messageType, duration) => {
+    setMessage(message);
+    setMessageType(messageType);
+    setTimeout(() => {
+      setMessage(null);
+      setMessageType("");
+    }, duration);
+  };
 
   useEffect(() => {
     personService.getAll().then((data) => setPersons(data));
@@ -28,7 +40,7 @@ const App = () => {
 
     if (existingPerson) {
       if (existingPerson.number === newNumber) {
-        alert(`${newName} is already in the Phonebook.`);
+        showNotification(`${newName} is already in the Phonebook.`, "error", 5000);
       } else if (
         window.confirm(
           `Do you want to update the number for ${existingPerson.name}?`
@@ -38,6 +50,7 @@ const App = () => {
         personService.update(newPerson.id, newPerson).then((data) => {
           const newPersons = persons.map((p) => (p.id === data.id ? data : p));
           setPersons(newPersons);
+          showNotification(`Updated ${data.name}`, "success", 5000);
         });
       }
     } else {
@@ -48,7 +61,10 @@ const App = () => {
 
       personService
         .create(newPerson)
-        .then((data) => setPersons(persons.concat(data)));
+        .then((data) => {
+          setPersons(persons.concat(data));
+          showNotification(`Added ${data.name}`, "success", 5000);
+        });
     }
     setNewName("");
     setNewNumber("");
@@ -74,6 +90,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={message} messageType={messageType} />
       <h2>Add to list</h2>
       <AddNameForm
         newName={newName}
