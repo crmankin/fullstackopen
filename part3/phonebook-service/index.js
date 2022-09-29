@@ -66,6 +66,14 @@ app.post('/api/persons', (request, response) => {
     const person = request.body;
     console.log("POST /api/person", person);
 
+    if (!person.name || !person.number) {
+        response.status(400).json({ error: "Missing name or number." });
+        return;
+    } else if (persons.some(p => p.name === person.name)) {
+        response.status(400).json({ error: "Name must be unique." });
+        return;
+    }
+
     const newId = Math.floor(Math.random() * 1000000 + 1);
     person.id = newId;
     persons = persons.concat(person);
