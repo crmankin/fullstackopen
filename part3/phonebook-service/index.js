@@ -30,6 +30,13 @@ app.get('/', (request, response) => {
     response.send('<h1>Persons DB Service</h1><p>Use REST endpoint /api/persons to retrieve full list.</p>');
 });
 
+app.get('/info', (request, response) => {
+    console.log("GET /info");
+    const count = persons.length;
+    const dt = new Date().toISOString();
+    response.send(`<p>Phonebook has info for ${count} people.</p><P>Request received: ${dt}</p>`);
+});
+
 app.get('/api/persons', (request, response) => {
     console.log("GET /api/persons")
     response.json(persons);
