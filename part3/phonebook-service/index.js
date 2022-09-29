@@ -25,6 +25,8 @@ let persons = [
 ];
 
 
+app.use(express.json());
+
 app.get('/', (request, response) => {
     console.log("GET /");
     response.send('<h1>Persons DB Service</h1><p>Use REST endpoint /api/persons to retrieve full list.</p>');
@@ -59,6 +61,18 @@ app.delete('/api/persons/:id', (request, response) => {
     persons = persons.filter(p => p.id !== id);
     response.status(204).end();
 });
+
+app.post('/api/persons', (request, response) => {
+    const person = request.body;
+    console.log("POST /api/person", person);
+
+    const newId = Math.floor(Math.random() * 1000000 + 1);
+    person.id = newId;
+    persons = persons.concat(person);
+
+    response.json(person);
+});
+
 
 const PORT = 3001;
 app.listen(PORT, () => {
