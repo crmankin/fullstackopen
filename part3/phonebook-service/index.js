@@ -1,3 +1,4 @@
+const { request } = require("express");
 const express = require("express");
 const morgan = require("morgan");
 
@@ -28,7 +29,12 @@ let persons = [
 
 
 app.use(express.json());
-app.use(morgan("tiny"));
+
+morgan.token("body", (req) => {
+    return (req.method === "POST" || req.method === "PUT") ? JSON.stringify(req.body) : "-";
+});
+
+app.use(morgan(":method :url :status :res[content-length] - :response-time ms :body"));
 
 app.get('/', (request, response) => {
     response.send('<h1>Persons DB Service</h1><p>Use REST endpoint /api/persons to retrieve full list.</p>');
@@ -62,7 +68,6 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
     const person = request.body;
-    console.log("POST /api/person body:", person);
 
     if (!person.name || !person.number) {
         response.status(400).json({ error: "Missing name or number." });
