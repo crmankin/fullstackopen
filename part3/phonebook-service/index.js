@@ -1,4 +1,4 @@
-const { request } = require("express");
+const cors = require("cors");
 const express = require("express");
 const morgan = require("morgan");
 
@@ -28,6 +28,7 @@ let persons = [
 ];
 
 
+app.use(cors());
 app.use(express.json());
 
 morgan.token("body", (req) => {
@@ -78,14 +79,14 @@ app.post('/api/persons', (request, response) => {
     }
 
     const newId = Math.floor(Math.random() * 1000000 + 1);
-    person.id = newId;
-    persons = persons.concat(person);
+    const newPerson = { ...person, id: newId };
+    persons = persons.concat(newPerson);
 
-    response.json(person);
+    response.json(newPerson);
 });
 
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
