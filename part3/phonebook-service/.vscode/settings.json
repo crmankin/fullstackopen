@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/422353bc-814c-4b0d-b447-6ef27abebf67/AppServices/subscriptions/422353bc-814c-4b0d-b447-6ef27abebf67/resourceGroups/phonebook-rg/providers/Microsoft.Web/sites/raistlin0788-pbservice",
+    "appService.deploySubpath": "."
+}
