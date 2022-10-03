@@ -1,4 +1,6 @@
 const express = require("express");
+const morgan = require("morgan");
+
 const app = express();
 
 let persons = [
@@ -26,27 +28,24 @@ let persons = [
 
 
 app.use(express.json());
+app.use(morgan("tiny"));
 
 app.get('/', (request, response) => {
-    console.log("GET /");
     response.send('<h1>Persons DB Service</h1><p>Use REST endpoint /api/persons to retrieve full list.</p>');
 });
 
 app.get('/info', (request, response) => {
-    console.log("GET /info");
     const count = persons.length;
     const dt = new Date().toISOString();
     response.send(`<p>Phonebook has info for ${count} people.</p><P>Request received: ${dt}</p>`);
 });
 
 app.get('/api/persons', (request, response) => {
-    console.log("GET /api/persons")
     response.json(persons);
 });
 
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id);
-    console.log(`GET /api/persons/${id}`);
     const person = persons.find(p => p.id === id);
     if (person) {
         response.json(person);
@@ -57,14 +56,13 @@ app.get('/api/persons/:id', (request, response) => {
 
 app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id);
-    console.log(`DELETE /api/persons/${id}`);
     persons = persons.filter(p => p.id !== id);
     response.status(204).end();
 });
 
 app.post('/api/persons', (request, response) => {
     const person = request.body;
-    console.log("POST /api/person", person);
+    console.log("POST /api/person body:", person);
 
     if (!person.name || !person.number) {
         response.status(400).json({ error: "Missing name or number." });
