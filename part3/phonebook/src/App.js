@@ -53,10 +53,15 @@ const App = () => {
             setPersons(newPersons);
             showNotification(`Updated ${data.name}`, "success", 5000);
           })
-          .catch(() => {
-            const newPersons = persons.filter((p) => p.id !== newPerson.id);
-            setPersons(newPersons);
-            showNotification(`Information on ${newPerson.name} has already been removed from the server.`, "error", 5000);
+          .catch(error => {
+            console.log(error);
+            if (error.response.status === 400) {
+              showNotification(error.response.data.error, "error", 8000);
+            } else {
+              const newPersons = persons.filter((p) => p.id !== newPerson.id);
+              setPersons(newPersons);
+              showNotification(`Information on ${newPerson.name} has already been removed from the server.`, "error", 5000);
+            }
           });
       }
     } else {
@@ -70,6 +75,9 @@ const App = () => {
         .then((data) => {
           setPersons(persons.concat(data));
           showNotification(`Added ${data.name}`, "success", 5000);
+        })
+        .catch(error => {
+          showNotification(error.response.data.error, "error", 8000);
         });
     }
     setNewName("");
