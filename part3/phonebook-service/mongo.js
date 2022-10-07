@@ -10,7 +10,6 @@ const password = process.argv[2]
 const url = `mongodb://admin:${password}@audradminsrv`
 
 const personSchema = new mongoose.Schema({
-    id: Number,
     name: String,
     number: String
 });
@@ -29,9 +28,7 @@ mongoose
             });
         } else {
             console.log(`adding ${process.argv[3]} to DB`);
-            const newId = Math.floor(Math.random() * 1000000 + 1);
             const person = new Person({
-                id: newId,
                 name: process.argv[3],
                 number: process.argv[4]
             });
