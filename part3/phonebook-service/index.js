@@ -77,10 +77,25 @@ app.post('/api/persons', (request, response, next) => {
     }).catch(err => next(err));
 });
 
+app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body;
+
+    const person = {
+        name: body.name,
+        number: body.number
+    };
+
+    Person.findByIdAndUpdate(request.params.id, person, { new: true })
+        .then(result => {
+            response.json(result)
+        })
+        .catch(error => next(error));
+});
+
 const errorHandler = (error, request, response, next) => {
     console.error(error.message);
 
-    if(error.name === 'CastError') {
+    if (error.name === 'CastError') {
         return response.status(400).send({ error: "malformed id" });
     }
 
