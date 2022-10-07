@@ -18,24 +18,24 @@ morgan.token("body", (req) => {
 
 app.use(morgan(":method :url :status :res[content-length] - :response-time ms :body"));
 
-app.get('/', (request, response) => {
-    response.send('<h1>Persons DB Service</h1><p>Use REST endpoint /api/persons to retrieve full list.</p>');
+app.get("/", (_request, response) => {
+    response.send("<h1>Persons DB Service</h1><p>Use REST endpoint /api/persons to retrieve full list.</p>");
 });
 
-app.get('/info', (request, response, next) => {
+app.get("/info", (_request, response, next) => {
     Person.estimatedDocumentCount().then(result => {
         const dt = new Date().toISOString();
         response.send(`<p>Phonebook has info for ${result} people.</p><P>Request received: ${dt}</p>`);
     }).catch(err => next(err));
 });
 
-app.get('/api/persons', (request, response, next) => {
+app.get("/api/persons", (_request, response, next) => {
     Person.find().then(result => {
-        response.json(result)
+        response.json(result);
     }).catch(err => next(err));
 });
 
-app.get('/api/persons/:id', (request, response, next) => {
+app.get("/api/persons/:id", (request, response, next) => {
     Person.findById(request.params.id).then(result => {
         if (result) {
             response.json(result);
@@ -45,13 +45,13 @@ app.get('/api/persons/:id', (request, response, next) => {
     }).catch(err => next(err));
 });
 
-app.delete('/api/persons/:id', (request, response, next) => {
-    Person.findByIdAndDelete(request.params.id).then(result => {
+app.delete("/api/persons/:id", (request, response, next) => {
+    Person.findByIdAndDelete(request.params.id).then(() => {
         response.status(204).end();
     }).catch(err => next(err));
 });
 
-app.post('/api/persons', (request, response, next) => {
+app.post("/api/persons", (request, response, next) => {
     const body = request.body;
 
     Person.findOne({
@@ -72,7 +72,7 @@ app.post('/api/persons', (request, response, next) => {
     }).catch(err => next(err));
 });
 
-app.put('/api/persons/:id', (request, response, next) => {
+app.put("/api/persons/:id", (request, response, next) => {
     const body = request.body;
 
     const person = {
@@ -82,7 +82,7 @@ app.put('/api/persons/:id', (request, response, next) => {
 
     Person.findByIdAndUpdate(request.params.id, person, { new: true, runValidators: true, context: "query" })
         .then(result => {
-            if(result) response.json(result)
+            if(result) response.json(result);
             else response.status(404).end();
         }).catch(error => next(error));
 });
@@ -90,9 +90,9 @@ app.put('/api/persons/:id', (request, response, next) => {
 const errorHandler = (error, request, response, next) => {
     console.error(error.message);
 
-    if (error.name === 'CastError') {
+    if (error.name === "CastError") {
         return response.status(400).send({ error: "malformed id" });
-    } else if (error.name === 'ValidationError') {
+    } else if (error.name === "ValidationError") {
         return response.status(400).json({ error: error.message });
     }
 

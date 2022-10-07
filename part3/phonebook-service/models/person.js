@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const url = process.env.MONGODB_URI;
 
 mongoose.connect(url)
-    .then(result => {
+    .then(() => {
         console.log("Connected to MongoDB");
     })
     .catch(err => {
@@ -27,7 +27,7 @@ const personSchema = new mongoose.Schema({
 });
 
 personSchema.set("toJSON", {
-    transform: (input, output) => {
+    transform: (_input, output) => {
         output.id = output._id.toString();
         delete output._id;
         delete output.__v;
