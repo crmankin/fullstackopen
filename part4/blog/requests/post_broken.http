@@ -1,0 +1,8 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Building a Node app from scratch",
+    "author": "crmankin",
+    "likes": "a"
+}
