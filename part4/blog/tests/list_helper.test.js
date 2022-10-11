@@ -122,3 +122,67 @@ describe("favorite blog", () => {
     });
 
 });
+
+
+describe("most blogs", () => {
+    const blogA = {
+        _id: "5a422aa71b54a676234d17f8",
+        title: "Go To Statement Considered Harmful",
+        author: "Edsger W. Dijkstra",
+        url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+        likes: 5,
+        __v: 0
+    };
+
+    const blogB = {
+        _id: "5a422a851b54a676234d17f7",
+        title: "React patterns",
+        author: "Michael Chan",
+        url: "https://reactpatterns.com/",
+        likes: 7,
+        __v: 0
+    };
+
+    const blogC = {
+        _id: "5a422b3a1b54a676234d17f9",
+        title: "Canonical string reduction",
+        author: "Edsger W. Dijkstra",
+        url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+        likes: 12,
+        __v: 0
+    };
+
+    const blogD = {
+        _id: "5a422b891b54a676234d17fa",
+        title: "First class tests",
+        author: "Robert C. Martin",
+        url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
+        likes: 12,
+        __v: 0
+    };
+
+    test("of empty list is null", () => {
+        const result = listHelper.mostBlogs([]);
+        expect(result).toBeNull();
+    });
+
+    test("of single item list equals that author", () => {
+        const result = listHelper.mostBlogs([blogB]);
+        expect(result).toEqual({ author: "Michael Chan", blogs: 1 });
+    });
+
+    test("of multiple items list equals the author with most blogs", () => {
+        const result = listHelper.mostBlogs([blogA, blogB, blogC, blogD]);
+        expect(result).toEqual({ author: "Edsger W. Dijkstra", blogs: 2 });
+    });
+
+    test("of multiple authors with the same count to be any of them", () => {
+        const result = listHelper.mostBlogs([blogA, blogB, blogD]);
+        expect([
+            { author: "Edsger W. Dijkstra", blogs: 1 },
+            { author: "Michael Chan", blogs: 1 },
+            { author: "Robert C. Martin", blogs: 1 }
+        ]).toContainEqual(result);
+    });
+
+});
