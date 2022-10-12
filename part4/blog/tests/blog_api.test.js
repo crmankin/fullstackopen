@@ -27,6 +27,11 @@ describe("blog api", () => {
         expect(djikstraBlogs).toHaveLength(expected);
     });
 
+    test("GET returns an id attribute for blogs", async () => {
+        const response = await api.get("/api/blogs");
+        expect(response.body[0].id).toBeDefined();
+    });
+
     afterAll(() => {
         mongoose.connection.close();
     });
