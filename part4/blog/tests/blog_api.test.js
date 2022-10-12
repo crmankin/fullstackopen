@@ -2,37 +2,40 @@ const mongoose = require("mongoose");
 const helper = require("./test_helper");
 const supertest = require("supertest");
 const app = require("../app");
+const Blog = require("../models/blog");
 
 const api = supertest(app);
 
-describe("blog api", () => {
-    beforeEach(helper.resetBlogDb);
+beforeEach(helper.resetBlogDb);
 
-    test("GET returns as json", async () => {
+describe("blog api - GET", () => {
+    test("returns as json", async () => {
         await api
             .get("/api/blogs")
             .expect(200)
             .expect("Content-Type", /application\/json/);
     });
 
-    test("GET returns all blogs", async () => {
+    test("returns all blogs", async () => {
         const response = await api.get("/api/blogs");
         expect(response.body).toHaveLength(helper.initialBlogs.length);
     });
 
-    test("GET returns correct number of blogs by a specific author", async () => {
+    test("returns correct number of blogs by a specific author", async () => {
         const response = await api.get("/api/blogs");
         const expected = helper.initialBlogs.filter(b => b.author === "Edsger W. Dijkstra").length;
         const djikstraBlogs = response.body.filter(b => b.author === "Edsger W. Dijkstra");
         expect(djikstraBlogs).toHaveLength(expected);
     });
 
-    test("GET returns an id attribute for blogs", async () => {
+    test("returns an id attribute for blogs", async () => {
         const response = await api.get("/api/blogs");
         expect(response.body[0].id).toBeDefined();
     });
+});
 
-    test("POST adds a single blog and returns it", async () => {
+describe("blog api - POST", () => {
+    test("succeeds with valid data returns the added entry", async () => {
         const testBlog = {
             title: "Results of Bad Testing",
             author: "Christopher R. Mankin",
@@ -56,7 +59,7 @@ describe("blog api", () => {
         expect(getResult.body).toContainEqual(postResult.body);
     });
 
-    test("POST uses a default value of 0 for likes", async () => {
+    test("uses a default value of 0 for likes", async () => {
         const testBlog = {
             title: "Results of Bad Testing",
             author: "Christopher R. Mankin",
@@ -75,7 +78,7 @@ describe("blog api", () => {
         expect(getBlog.likes).toEqual(0);
     });
 
-    test("POST returns 400 when title isn't provided", async () => {
+    test("returns status code 400 when title isn't provided", async () => {
         const testBlog = {
             author: "Christopher R. Mankin",
             url: "https://property.franklincountyauditor.com"
@@ -88,7 +91,7 @@ describe("blog api", () => {
             .expect("Content-Type", /application\/json/);
     });
 
-    test("POST returns 400 when url isn't provided", async () => {
+    test("returns status code 400 when url isn't provided", async () => {
         const testBlog = {
             title: "Results of Bad Testing",
             author: "Christopher R. Mankin"
@@ -100,9 +103,23 @@ describe("blog api", () => {
             .expect(400)
             .expect("Content-Type", /application\/json/);
     });
+});
 
-    afterAll(() => {
-        mongoose.connection.close();
+describe("blog api - DELETE", () => {
+    test("succeeds with status code 204 if id is valid", async () => {
+        const blogsAtStart = await Blog.find({});
+        const blogToDelete = blogsAtStart[0];
+
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .expect(204);
+
+        const blogsAtEnd = await Blog.find({});
+        expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1);
+        expect(blogsAtEnd).not.toContainEqual(blogToDelete);
     });
+});
 
+afterAll(() => {
+    mongoose.connection.close();
 });
