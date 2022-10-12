@@ -32,6 +32,30 @@ describe("blog api", () => {
         expect(response.body[0].id).toBeDefined();
     });
 
+    test("POST adds a single blog and returns it", async () => {
+        const testBlog = {
+            title: "Results of Bad Testing",
+            author: "Christopher R. Mankin",
+            url: "https://property.franklincountyauditor.com",
+            likes: 150
+        };
+
+        const postResult = await api
+            .post("/api/blogs")
+            .send(testBlog)
+            .expect(201)
+            .expect("Content-Type", /application\/json/);
+
+        expect(postResult.body).toEqual({
+            ...testBlog,
+            id: expect.any(String)
+        });
+
+        const getResult = await api.get("/api/blogs");
+        expect(getResult.body).toHaveLength(helper.initialBlogs.length + 1);
+        expect(getResult.body).toContainEqual(postResult.body);
+    });
+
     afterAll(() => {
         mongoose.connection.close();
     });
