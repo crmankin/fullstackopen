@@ -1,8 +1,21 @@
 {
     "version": "0.2.0",
     "configurations": [
+    {
+        "name": "Dev",
+        "type": "node",
+        "request": "launch",
+        "runtimeArgs": [
+            "run",
+            "dev"
+        ],
+        "runtimeExecutable": "npm",
+        "skipFiles": [
+            "<node_internals>/**"
+        ]        
+    },
         {
-            "name": "Debug Jest Tests",
+            "name": "Jest",
             "type": "node",
             "request": "launch",
             "runtimeArgs": [
