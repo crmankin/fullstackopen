@@ -56,6 +56,25 @@ describe("blog api", () => {
         expect(getResult.body).toContainEqual(postResult.body);
     });
 
+    test("POST uses a default value of 0 for likes", async () => {
+        const testBlog = {
+            title: "Results of Bad Testing",
+            author: "Christopher R. Mankin",
+            url: "https://property.franklincountyauditor.com"
+        };
+
+        const postResult = await api
+            .post("/api/blogs")
+            .send(testBlog)
+            .expect(201)
+            .expect("Content-Type", /application\/json/);
+        expect(postResult.body.likes).toEqual(0);
+
+        const getResult = await api.get("/api/blogs");
+        const getBlog = getResult.body.filter(b => b.id === postResult.body.id)[0];
+        expect(getBlog.likes).toEqual(0);
+    });
+
     afterAll(() => {
         mongoose.connection.close();
     });
