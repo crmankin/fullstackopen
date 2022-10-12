@@ -75,6 +75,32 @@ describe("blog api", () => {
         expect(getBlog.likes).toEqual(0);
     });
 
+    test("POST returns 400 when title isn't provided", async () => {
+        const testBlog = {
+            author: "Christopher R. Mankin",
+            url: "https://property.franklincountyauditor.com"
+        };
+
+        await api
+            .post("/api/blogs")
+            .send(testBlog)
+            .expect(400)
+            .expect("Content-Type", /application\/json/);
+    });
+
+    test("POST returns 400 when url isn't provided", async () => {
+        const testBlog = {
+            title: "Results of Bad Testing",
+            author: "Christopher R. Mankin"
+        };
+
+        await api
+            .post("/api/blogs")
+            .send(testBlog)
+            .expect(400)
+            .expect("Content-Type", /application\/json/);
+    });
+
     afterAll(() => {
         mongoose.connection.close();
     });
