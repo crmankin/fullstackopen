@@ -35,7 +35,7 @@ describe("blog api - GET", () => {
 });
 
 describe("blog api - POST", () => {
-    test("succeeds with valid data returns the added entry", async () => {
+    test("succeeds with valid data and returns the added entry", async () => {
         const testBlog = {
             title: "Results of Bad Testing",
             author: "Christopher R. Mankin",
@@ -117,6 +117,28 @@ describe("blog api - DELETE", () => {
         const blogsAtEnd = await Blog.find({});
         expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1);
         expect(blogsAtEnd).not.toContainEqual(blogToDelete);
+    });
+});
+
+describe("blog api - PUT", () => {
+    test("successfully updates likes and returns the added entry", async () => {
+        const blogsAtStart = await Blog.find({});
+        const blogToUpdate = {
+            id: blogsAtStart[0]._id.toString(),
+            likes: blogsAtStart[0].likes
+        };
+        const originalLikes = blogToUpdate.likes;
+        blogToUpdate.likes += 10;
+
+        const result = await api
+            .put(`/api/blogs/${blogToUpdate.id}`)
+            .send(blogToUpdate)
+            .expect(200);
+
+        const results = await api.get("/api/blogs");
+        const updatedBlog = results.body.filter(b => b.id === blogToUpdate.id)[0];
+        expect(updatedBlog.likes).toEqual(originalLikes + 10);
+        expect(result.body).toEqual(updatedBlog);
     });
 });
 
