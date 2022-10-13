@@ -32,7 +32,19 @@ blogRouter.post("/", async (request, response) => {
 });
 
 blogRouter.delete("/:id", async (request, response) => {
-    await Blog.findByIdAndDelete(request.params.id);
+    if (!request.token || !request.token.id) {
+        return response.status(401).json({ error: "token missing or invalid" });
+    }
+
+    const blog = await Blog.findById(request.params.id);
+    if(blog) {
+        if(blog.user && blog.user.toString() !== request.token.id) {
+            return response.status(401).json({ error: "blog can only be deleted by the owner" });
+        }
+
+        await blog.delete();
+    }
+
     response.status(204).end();
 });
 
