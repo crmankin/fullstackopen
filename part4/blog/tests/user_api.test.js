@@ -58,7 +58,7 @@ describe("user api - POST", () => {
     });
 
 
-    test("returns status code 400 when username isn't provided", async () => {
+    test("fails and returns status code 400 when username isn't provided", async () => {
         const testUser = {
             name: "Anon Ymous",
             password: "1337"
@@ -69,9 +69,12 @@ describe("user api - POST", () => {
             .send(testUser)
             .expect(400)
             .expect("Content-Type", /application\/json/);
+
+        const usersAtEnd = await api.get("/api/users");
+        expect(usersAtEnd.body).toHaveLength(1);
     });
 
-    test("returns status code 400 when password isn't provided", async () => {
+    test("fails and returns status code 400 when password isn't provided", async () => {
         const testUser = {
             name: "Anon Ymous",
             username: "anon"
@@ -82,5 +85,25 @@ describe("user api - POST", () => {
             .send(testUser)
             .expect(400)
             .expect("Content-Type", /application\/json/);
+
+        const usersAtEnd = await api.get("/api/users");
+        expect(usersAtEnd.body).toHaveLength(1);
+    });
+
+    test("fails and returns status code 400 when username is not unique", async () => {
+        const testUser = {
+            name: "Sleepy Joe",
+            username: "root",
+            password: "didn't I already register"
+        };
+
+        await api
+            .post("/api/users")
+            .send(testUser)
+            .expect(400)
+            .expect("Content-Type", /application\/json/);
+
+        const usersAtEnd = await api.get("/api/users");
+        expect(usersAtEnd.body).toHaveLength(1);
     });
 });
