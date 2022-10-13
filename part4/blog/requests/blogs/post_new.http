@@ -1,5 +1,6 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNybWFua2luIiwiaWQiOiI2MzQ4MWYxMzdhNzI4YjEyMTE0NDMyNmQiLCJpYXQiOjE2NjU2NzkwODh9.MFiQRKyJubMmAiEMuZsenAve5wgEjyx-cwz11sXhFbY
 
 {
     "title": "Building a Node app from scratch",

@@ -11,7 +11,12 @@ blogRouter.get("/", async (request, response) => {
 
 blogRouter.post("/", async (request, response) => {
     const { title, author, url, likes } = request.body;
-    const user = await User.findOne({});
+
+    if (!request.token || !request.token.id) {
+        return response.status(401).json({ error: "token missing or invalid" });
+    }
+
+    const user = await User.findById(request.token.id);
 
     const blog = new Blog({
         title,
