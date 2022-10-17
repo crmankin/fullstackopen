@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
-const helper = require("./blog_test_helper");
+const helper = require("./test_helper");
 const supertest = require("supertest");
 const app = require("../app");
-const Blog = require("../models/blog");
 
 const api = supertest(app);
+
 
 beforeEach(helper.resetBlogDb);
 
@@ -19,13 +19,7 @@ describe("blog api - GET", () => {
     test("returns all blogs", async () => {
         const response = await api.get("/api/blogs");
         expect(response.body).toHaveLength(helper.initialBlogs.length);
-    });
-
-    test("returns correct number of blogs by a specific author", async () => {
-        const response = await api.get("/api/blogs");
-        const expected = helper.initialBlogs.filter(b => b.author === "Edsger W. Dijkstra").length;
-        const djikstraBlogs = response.body.filter(b => b.author === "Edsger W. Dijkstra");
-        expect(djikstraBlogs).toHaveLength(expected);
+        expect(response.body.map(b => b.title)).toEqual(expect.arrayContaining(helper.initialBlogs.map(b => b.title)));
     });
 
     test("returns an id attribute for blogs", async () => {
@@ -35,6 +29,38 @@ describe("blog api - GET", () => {
 });
 
 describe("blog api - POST", () => {
+    let creds;
+    beforeEach(async () => {
+        const user = helper.initialUsers[0];
+
+        const loginResult = await api
+            .post("/api/login")
+            .send({
+                username: user.username,
+                password: user.password
+            });
+
+        creds = loginResult.body;
+    });
+
+    test("fails when no authorization provided", async () => {
+        const testBlog = {
+            title: "Unsuccessful Hacks",
+            author: "Dr. Dim Witted",
+            url: "https://www.amazon.com",
+            likes: 3
+        };
+
+        await api
+            .post("/api/blogs")
+            .send(testBlog)
+            .expect(401)
+            .expect("Content-Type", /application\/json/);
+
+        const blogs = await helper.blogsInDb();
+        expect(blogs.length).toEqual(helper.initialBlogs.length);
+    });
+
     test("succeeds with valid data and returns the added entry", async () => {
         const testBlog = {
             title: "Results of Bad Testing",
@@ -45,18 +71,20 @@ describe("blog api - POST", () => {
 
         const postResult = await api
             .post("/api/blogs")
+            .set("Authorization", `bearer ${creds.token}`)
             .send(testBlog)
             .expect(201)
             .expect("Content-Type", /application\/json/);
 
         expect(postResult.body).toEqual({
             ...testBlog,
-            id: expect.any(String)
+            id: expect.any(String),
+            user: expect.any(String)
         });
 
         const getResult = await api.get("/api/blogs");
         expect(getResult.body).toHaveLength(helper.initialBlogs.length + 1);
-        expect(getResult.body).toContainEqual(postResult.body);
+        expect(getResult.body.map(b => b.id)).toContain(postResult.body.id);
     });
 
     test("uses a default value of 0 for likes", async () => {
@@ -68,6 +96,7 @@ describe("blog api - POST", () => {
 
         const postResult = await api
             .post("/api/blogs")
+            .set("Authorization", `bearer ${creds.token}`)
             .send(testBlog)
             .expect(201)
             .expect("Content-Type", /application\/json/);
@@ -86,6 +115,7 @@ describe("blog api - POST", () => {
 
         await api
             .post("/api/blogs")
+            .set("Authorization", `bearer ${creds.token}`)
             .send(testBlog)
             .expect(400)
             .expect("Content-Type", /application\/json/);
@@ -99,6 +129,7 @@ describe("blog api - POST", () => {
 
         await api
             .post("/api/blogs")
+            .set("Authorization", `bearer ${creds.token}`)
             .send(testBlog)
             .expect(400)
             .expect("Content-Type", /application\/json/);
@@ -106,25 +137,65 @@ describe("blog api - POST", () => {
 });
 
 describe("blog api - DELETE", () => {
+    let creds;
+    beforeEach(async () => {
+        const user = helper.initialUsers[0];
+
+        const loginResult = await api
+            .post("/api/login")
+            .send({
+                username: user.username,
+                password: user.password
+            });
+
+        creds = loginResult.body;
+    });
+
     test("succeeds with status code 204 if id is valid", async () => {
-        const blogsAtStart = await Blog.find({});
+        const blogsAtStart = await helper.blogsInDb();
+        const blogToDelete = blogsAtStart.filter(b => b.user.username === creds.username)[0];
+
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .set("Authorization", `bearer ${creds.token}`)
+            .expect(204);
+
+        const blogsAtEnd = await helper.blogsInDb();
+        expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1);
+        expect(blogsAtEnd.map(b => b.id)).not.toContain(blogToDelete.id);
+    });
+
+    test("fails with status code 401 if no authentication provided", async () => {
+        const blogsAtStart = await helper.blogsInDb();
         const blogToDelete = blogsAtStart[0];
 
         await api
             .delete(`/api/blogs/${blogToDelete.id}`)
-            .expect(204);
+            .expect(401);
 
-        const blogsAtEnd = await Blog.find({});
-        expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1);
-        expect(blogsAtEnd).not.toContainEqual(blogToDelete);
+        const blogsAtEnd = await helper.blogsInDb();
+        expect(blogsAtEnd).toHaveLength(blogsAtStart.length);
+    });
+
+    test("fails with status code 401 if authenticated as different user", async () => {
+        const blogsAtStart = await helper.blogsInDb();
+        const blogToDelete = blogsAtStart.filter(b => b.user.username !== creds.username)[0];
+
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .set("Authorization", `bearer ${creds.token}`)
+            .expect(401);
+
+        const blogsAtEnd = await helper.blogsInDb();
+        expect(blogsAtEnd).toHaveLength(blogsAtStart.length);
     });
 });
 
 describe("blog api - PUT", () => {
     test("successfully updates likes and returns the added entry", async () => {
-        const blogsAtStart = await Blog.find({});
+        const blogsAtStart = await helper.blogsInDb();
         const blogToUpdate = {
-            id: blogsAtStart[0]._id.toString(),
+            id: blogsAtStart[0].id,
             likes: blogsAtStart[0].likes
         };
         const originalLikes = blogToUpdate.likes;
@@ -138,7 +209,10 @@ describe("blog api - PUT", () => {
         const results = await api.get("/api/blogs");
         const updatedBlog = results.body.filter(b => b.id === blogToUpdate.id)[0];
         expect(updatedBlog.likes).toEqual(originalLikes + 10);
-        expect(result.body).toEqual(updatedBlog);
+        expect(result.body).toEqual({
+            ...updatedBlog,
+            user: expect.anything()
+        });
     });
 });
 

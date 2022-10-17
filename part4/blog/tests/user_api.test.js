@@ -1,4 +1,4 @@
-const helper = require("./user_test_helper");
+const helper = require("./test_helper");
 const supertest = require("supertest");
 const app = require("../app");
 
@@ -14,10 +14,10 @@ describe("user api - GET", () => {
             .expect("Content-Type", /application\/json/);
     });
 
-    test("returns one root user", async () => {
+    test("returns the test users", async () => {
         const response = await api.get("/api/users");
-        expect(response.body).toHaveLength(1);
-        expect(response.body[0].username).toEqual("root");
+        expect(response.body).toHaveLength(helper.initialUsers.length);
+        expect(response.body.map(u => u.username)).toEqual(expect.arrayContaining(helper.initialUsers.map(u => u.username)));
     });
 
     test("returns an id attribute", async () => {
@@ -49,11 +49,12 @@ describe("user api - POST", () => {
         expect(postResult.body).toEqual({
             name: "Joe Biden",
             username: "prez",
-            id: expect.any(String)
+            id: expect.any(String),
+            blogs: []
         });
 
         const getResult = await api.get("/api/users");
-        expect(getResult.body).toHaveLength(2);
+        expect(getResult.body).toHaveLength(helper.initialUsers.length + 1);
         expect(getResult.body).toContainEqual(postResult.body);
     });
 
@@ -71,7 +72,7 @@ describe("user api - POST", () => {
             .expect("Content-Type", /application\/json/);
 
         const usersAtEnd = await api.get("/api/users");
-        expect(usersAtEnd.body).toHaveLength(1);
+        expect(usersAtEnd.body).toHaveLength(helper.initialUsers.length);
     });
 
     test("fails and returns status code 400 when password isn't provided", async () => {
@@ -87,13 +88,13 @@ describe("user api - POST", () => {
             .expect("Content-Type", /application\/json/);
 
         const usersAtEnd = await api.get("/api/users");
-        expect(usersAtEnd.body).toHaveLength(1);
+        expect(usersAtEnd.body).toHaveLength(helper.initialUsers.length);
     });
 
     test("fails and returns status code 400 when username is not unique", async () => {
         const testUser = {
             name: "Sleepy Joe",
-            username: "root",
+            username: helper.initialUsers[0].username,
             password: "didn't I already register"
         };
 
@@ -104,6 +105,6 @@ describe("user api - POST", () => {
             .expect("Content-Type", /application\/json/);
 
         const usersAtEnd = await api.get("/api/users");
-        expect(usersAtEnd.body).toHaveLength(1);
+        expect(usersAtEnd.body).toHaveLength(helper.initialUsers.length);
     });
 });
