@@ -36,7 +36,7 @@ const App = () => {
     setTimeout(() => {
       setMessage(null);
       setMessageType("");
-    }, duration);
+    }, duration || 5000);
   };
 
   const handleCreate = async (title, author, url) => {
@@ -59,6 +59,18 @@ const App = () => {
     setBlogs(blogs.map(b => b.id === blog.id ? savedBlog : b));
   };
 
+  const handleRemove = async (blog) => {
+    if (window.confirm(`Remove blog "${blog.title}"?`)) {
+      try {
+        await blogService.remove(blog);
+        setBlogs(blogs.filter(b => b !== blog));
+        showNotification(`Removed "${blog.title}"`, "success", 5000);
+      } catch (exception) {
+        showNotification(exception.response.data.error || "Error removing blog", "error", 5000);
+      }
+    }
+  };
+
   return (
     <div>
       <Notification message={message} messageType={messageType} />
@@ -69,7 +81,7 @@ const App = () => {
           <CreateBlogForm handleCreate={handleCreate} showNotification={showNotification} />
         </Toggleable>
       }
-      {user !== null && <BlogList blogs={blogs} handleLike={handleLike} />}
+      {user !== null && <BlogList blogs={blogs} handleLike={handleLike} handleRemove={handleRemove} />}
     </div>
   )
 }
