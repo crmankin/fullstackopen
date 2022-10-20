@@ -7,6 +7,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+#root {
+  margin: 10px;
+}
+
 .error, .success {
   margin: 1.5em;
   padding: 0.5em;

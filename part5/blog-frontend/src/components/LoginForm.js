@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import loginService from '../services/login'
+import blogService from '../services/blogs'
 
 const LoginForm = ({ user, setUser, showNotification }) => {
   const [username, setUsername] = useState('');
@@ -12,17 +13,19 @@ const LoginForm = ({ user, setUser, showNotification }) => {
     try {
       const user = await loginService.login(username, password);
       setUser(user);
+      blogService.setToken(user.token);
       window.localStorage.setItem('BlogUser', JSON.stringify(user));
       setUsername('');
       setPassword('');
     } catch (exception) {
-      showNotification(exception.response.data.error || "No", "error", 5000);
+      showNotification(exception.response.data.error || "Error logging in", "error", 5000);
     }
   }
 
   const handleLogout = async (event) => {
     window.localStorage.removeItem('BlogUser');
     setUser(null);
+    blogService.setToken(null);
   }
 
   return (
