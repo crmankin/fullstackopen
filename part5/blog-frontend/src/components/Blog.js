@@ -1,7 +1,24 @@
-const Blog = ({blog}) => (
-  <div className="blogItem">
-    <span className="blogTitle">{blog.title}</span> <span className="blogAuthor">{blog.author}</span>
-  </div>  
-)
+import { useState } from 'react';
 
-export default Blog
+const Blog = ({ blog }) => {
+  const [visible, setVisible] = useState(false);
+
+  const toggleVisible = () => {
+    setVisible(!visible);
+  };
+
+  return (
+    <div className="blogItem">
+      <div className="blogTitle">{blog.title}</div>
+      <div className="blogAuthor">{blog.author}</div>
+      <button onClick={toggleVisible}>{visible ? "hide" : "show"}</button>
+      <div className="blogDetails" style={visible ? { display: 'block' } : { display: 'none' }}>
+        <div className="blogUrl">URL: <a href={blog.url} target="_blank" rel="noreferrer">{blog.url}</a></div>
+        <div className="blogLikes">Likes: {blog.likes}</div>
+        <div className="blogCreator">Added by: {blog.user.name}</div>
+      </div>
+    </div>
+  );
+}
+
+export default Blog;

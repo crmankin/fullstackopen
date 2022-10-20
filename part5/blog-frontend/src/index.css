@@ -37,10 +37,14 @@ body {
 .blogTitle {
   font-weight: bold;
   font-variant: small-caps;
+  display: inline-block;
+  margin: 3px;
 }
 
 .blogAuthor {
   font-size: 0.9em;
   font-weight: lighter;
   font-style: italic;
+  display: inline-block;
+  margin: 3px;
 }
