@@ -15,7 +15,15 @@ const App = () => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
     )
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    const loggedInUserJSON = window.localStorage.getItem('BlogUser');
+    if (loggedInUserJSON) {
+      const user = JSON.parse(loggedInUserJSON);
+      setUser(user);
+    }
+  }, []);
 
   const showNotification = (message, messageType, duration) => {
     setMessage(message);
@@ -29,14 +37,8 @@ const App = () => {
   return (
     <div>
       <Notification message={message} messageType={messageType} />
-      {user === null
-        ? <LoginForm setUser={setUser} showNotification={showNotification} />
-        : (
-          <div><p>Logged in as {user.username}</p>
-            <BlogList blogs={blogs} />
-          </div>
-        )
-      }
+      <LoginForm user={user} setUser={setUser} showNotification={showNotification} />
+      {user !== null && <BlogList blogs={blogs} />}
     </div>
   )
 }
