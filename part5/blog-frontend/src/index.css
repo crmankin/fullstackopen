@@ -26,3 +26,21 @@ body {
   color: green;
   border: 1px solid green;
 }
+
+.blogItem {
+  border: 1px solid #ccc;
+  margin: 2px;
+  padding: 6px;
+  border-radius: 1em;
+}
+
+.blogTitle {
+  font-weight: bold;
+  font-variant: small-caps;
+}
+
+.blogAuthor {
+  font-size: 0.9em;
+  font-weight: lighter;
+  font-style: italic;
+}

@@ -10,10 +10,10 @@ const CreateBlogForm = ({ handleCreate, showNotification }) => {
     event.preventDefault();
     try {
       handleCreate(title, author, url);
+      showNotification(`Add new blog: ${title}`, "success", 3000);
       setTitle('');
       setAuthor('');
       setURL('');
-      showNotification("Blog added", "success");
     } catch (exception) {
       showNotification(exception.response.data.error || "Error creating blog", "error", 5000);
     }
