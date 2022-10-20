@@ -46,6 +46,19 @@ const App = () => {
     createFormRef.current.toggleVisible();
   }
 
+  const handleLike = async (blog) => {
+    const updateBlog = {
+      id: blog.id,
+      user: blog.user.id,
+      likes: blog.likes + 1,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url
+    };
+    const savedBlog = await blogService.update(updateBlog);
+    setBlogs(blogs.map(b => b.id === blog.id ? savedBlog : b));
+  };
+
   return (
     <div>
       <Notification message={message} messageType={messageType} />
@@ -56,7 +69,7 @@ const App = () => {
           <CreateBlogForm handleCreate={handleCreate} showNotification={showNotification} />
         </Toggleable>
       }
-      {user !== null && <BlogList blogs={blogs} />}
+      {user !== null && <BlogList blogs={blogs} handleLike={handleLike} />}
     </div>
   )
 }

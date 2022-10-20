@@ -37,8 +37,8 @@ blogRouter.delete("/:id", async (request, response) => {
     }
 
     const blog = await Blog.findById(request.params.id);
-    if(blog) {
-        if(blog.user && blog.user.toString() !== request.token.id) {
+    if (blog) {
+        if (blog.user && blog.user.toString() !== request.token.id) {
             return response.status(401).json({ error: "blog can only be deleted by the owner" });
         }
 
@@ -58,7 +58,7 @@ blogRouter.put("/:id", async (request, response) => {
         likes: body.likes
     };
 
-    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true, runValidators: true, context: "query" });
+    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true, runValidators: true, context: "query" }).populate("user", { username: 1, name: 1 });
     response.json(updatedBlog);
 });
 
