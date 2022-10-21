@@ -46,11 +46,28 @@ describe("Blog component", () => {
         const button = screen.getByText("show");
         await user.click(button);
 
-        const url = screen.queryByText(blog.url, { exact: false });
-        const likes = screen.queryByText(blog.likes, { exact: false });
+        const url = screen.getByText(blog.url, { exact: false });
+        const likes = screen.getByText(blog.likes, { exact: false });
+        const likeButton = screen.getByText("like");
 
         expect(url).toBeDefined();
         expect(likes).toBeDefined();
+        expect(likeButton).toBeDefined();
+    });
+
+    test("calls appropriate handler each time like button is clicked", async () => {
+        render(<Blog blog={blog} handleLike={likeFn} handleRemove={removeFn} />);
+
+        const user = userEvent.setup();
+        const showButton = screen.getByText("show");
+        await user.click(showButton);
+        const likeButton = screen.getByText("like");
+
+        expect(likeFn).toBeCalledTimes(0);
+        await user.click(likeButton);
+        expect(likeFn).toBeCalledTimes(1);
+        await user.click(likeButton);
+        expect(likeFn).toBeCalledTimes(2);
     });
 });
 
