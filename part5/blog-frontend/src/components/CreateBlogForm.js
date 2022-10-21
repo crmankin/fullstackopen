@@ -24,9 +24,9 @@ const CreateBlogForm = ({ handleCreate, showNotification }) => {
         <div>
             <h2>Add New</h2>
             <form onSubmit={handleAdd}>
-                <label htmlFor="Title">Title:</label> <input type="text" name="Title" value={title} onChange={({ target }) => setTitle(target.value)}></input><br />
-                <label htmlFor="Author">Author:</label> <input type="text" name="Author" value={author} onChange={({ target }) => setAuthor(target.value)}></input><br />
-                <label htmlFor="URL">URL:</label> <input type="text" name="URL" value={url} onChange={({ target }) => setURL(target.value)}></input><br />
+                <label htmlFor="Title">Title:</label> <input type="text" name="Title" placeholder="Title" value={title} onChange={({ target }) => setTitle(target.value)}></input><br />
+                <label htmlFor="Author">Author:</label> <input type="text" name="Author" placeholder="Author" value={author} onChange={({ target }) => setAuthor(target.value)}></input><br />
+                <label htmlFor="URL">URL:</label> <input type="text" name="URL" placeholder="URL" value={url} onChange={({ target }) => setURL(target.value)}></input><br />
                 <button type="submit">Create</button>
             </form>
         </div>
