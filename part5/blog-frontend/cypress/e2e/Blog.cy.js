@@ -73,11 +73,24 @@ describe("Blog app", () => {
         it("a blog can be created", () => {
             cy.contains("New Blog").click();
             cy.get("input[type=text][placeholder=Title]").type("Cypress Guarantees Perfection");
-            cy.get("input[type=text][placeholder=Author]").type("Old Charlie")
+            cy.get("input[type=text][placeholder=Author]").type("Old Charlie");
             cy.get("input[type=text][placeholder=URL]").type("https://docs.cypress.io/");
             cy.contains("Create").click();
+            cy.get("#blogList").contains("Cypress Guarantees Perfection");
             cy.contains("Create").should("not.be.visible");
-            cy.contains("Cypress Guarantees Perfection");
+        });
+
+        it("a blog can be liked", () => {
+            cy.contains("New Blog").click();
+            cy.get("input[type=text][placeholder=Title]").type("Cypress Guarantees Perfection");
+            cy.get("input[type=text][placeholder=Author]").type("Old Charlie");
+            cy.get("input[type=text][placeholder=URL]").type("https://docs.cypress.io/");
+            cy.contains("Create").click();
+            cy.get("#blogList").contains("Cypress Guarantees Perfection").parent().as("blogDiv");
+            cy.get("@blogDiv").contains("show").click();
+            cy.get("@blogDiv").get(".blogLikes").contains("Likes: 0");
+            cy.get("@blogDiv").contains("like").click();
+            cy.get("@blogDiv").get(".blogLikes").contains("Likes: 1");
         });
     });
 });
