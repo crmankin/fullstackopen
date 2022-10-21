@@ -31,11 +31,11 @@ const LoginForm = ({ user, setUser, showNotification }) => {
     return (
         <div>
             {user && <p>Logged in as {user.username} <button onClick={handleLogout}>Logout</button></p>}
-            {!user && <form onSubmit={handleLogin}>
+            {!user && <form id="frmLogin" onSubmit={handleLogin}>
                 <h2>Login</h2>
-                <label htmlFor="Username">Username:</label> <input type="text" value={username} name="Username" onChange={({ target }) => setUsername(target.value)} /><br />
-                <label htmlFor="Password">Password:</label> <input type="password" value={password} name="Password" onChange={({ target }) => setPassword(target.value)} /><br />
-                <button type="submit">Login</button>
+                <label htmlFor="Username">Username:</label> <input type="text" value={username} name="Username" id="txtUsername" onChange={({ target }) => setUsername(target.value)} /><br />
+                <label htmlFor="Password">Password:</label> <input type="password" value={password} name="Password" id="txtPassword" onChange={({ target }) => setPassword(target.value)} /><br />
+                <button type="submit" id="btnLogin">Login</button>
             </form>}
         </div>
     );
