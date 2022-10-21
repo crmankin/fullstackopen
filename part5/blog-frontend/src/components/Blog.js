@@ -13,12 +13,12 @@ const Blog = ({ blog, handleLike, handleRemove }) => {
             <div className="blogTitle">{blog.title}</div>
             <div className="blogAuthor">{blog.author}</div>
             <button onClick={toggleVisible}>{visible ? "hide" : "show"}</button>
-            <div className="blogDetails" style={visible ? { display: "block" } : { display: "none" }}>
+            {visible && <div className="blogDetails">
                 <div className="blogUrl">URL: <a href={blog.url} target="_blank" rel="noreferrer">{blog.url}</a></div>
                 <div className="blogLikes">Likes: {blog.likes} <button onClick={() => handleLike(blog)}>Like</button></div>
                 <div className="blogCreator">Added by: {blog.user.name}</div>
                 <div><button onClick={() => handleRemove(blog)}>Remove</button></div>
-            </div>
+            </div>}
         </div>
     );
 };
