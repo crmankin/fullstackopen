@@ -7,10 +7,10 @@ const CreateBlogForm = ({ handleCreate, showNotification }) => {
     const [url, setURL] = useState("");
 
 
-    const handleAdd = (event) => {
+    const handleAdd = async (event) => {
         event.preventDefault();
         try {
-            handleCreate(title, author, url);
+            await handleCreate(title, author, url);
             showNotification(`Add new blog: ${title}`, "success", 3000);
             setTitle("");
             setAuthor("");
