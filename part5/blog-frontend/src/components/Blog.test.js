@@ -1,6 +1,7 @@
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import Blog from "./Blog";
 
 describe("Blog component", () => {
@@ -36,6 +37,20 @@ describe("Blog component", () => {
         expect(author).toBeDefined();
         expect(url).toBeNull();
         expect(likes).toBeNull();
+    });
+
+    test("renders url and like after clicking show", async () => {
+        render(<Blog blog={blog} handleLike={likeFn} handleRemove={removeFn} />);
+
+        const user = userEvent.setup();
+        const button = screen.getByText("show");
+        await user.click(button);
+
+        const url = screen.queryByText(blog.url, { exact: false });
+        const likes = screen.queryByText(blog.likes, { exact: false });
+
+        expect(url).toBeDefined();
+        expect(likes).toBeDefined();
     });
 });
 
