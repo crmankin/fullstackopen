@@ -11,7 +11,7 @@ const CreateBlogForm = ({ handleCreate, showNotification }) => {
         event.preventDefault();
         try {
             await handleCreate(title, author, url);
-            showNotification(`Add new blog: ${title}`, "success", 3000);
+            showNotification(`Added new blog: ${title}`, "success", 3000);
             setTitle("");
             setAuthor("");
             setURL("");
