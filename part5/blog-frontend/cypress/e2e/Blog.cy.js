@@ -78,6 +78,14 @@ describe("Blog app", () => {
             cy.contains("Create").click();
         };
 
+        const createBlog2 = () => {
+            cy.contains("New Blog").click();
+            cy.get("input[type=text][placeholder=Title]").type("Test Every Angle");
+            cy.get("input[type=text][placeholder=Author]").type("Young Buck");
+            cy.get("input[type=text][placeholder=URL]").type("https://facebook.com/");
+            cy.contains("Create").click();
+        };
+
         it("a blog can be created", () => {
             createBlog();
             cy.get("#blogList").contains("Cypress Guarantees Perfection");
@@ -102,7 +110,7 @@ describe("Blog app", () => {
             cy.get("#blogList").contains("Cypress Guarantees Perfection").should("not.exist");
         });
 
-        it.only("a blog cannot be deleted by another user", () => {
+        it("a blog cannot be deleted by another user", () => {
             createBlog();
             // switch user logged in
             cy.request("POST", "http://localhost:3003/api/users", {
@@ -120,6 +128,33 @@ describe("Blog app", () => {
             cy.get("@blogDiv").contains("remove").click();
             cy.contains("blog can only be deleted by the owner");
             cy.get("#blogList").contains("Cypress Guarantees Perfection");
+        });
+
+        it("blogs are ordered by number of likes", () => {
+            createBlog();
+            createBlog2();
+
+            // three likes on the first blog
+            cy.get("#blogList").contains("Cypress Guarantees Perfection").parent().as("blog1Div");
+            cy.get("@blog1Div").contains("show").click();
+            cy.get("@blog1Div").contains("like").click().click().click();
+            cy.get("@blog1Div").get(".blogLikes").contains("Likes: 3");
+
+            // two likes on the second blog
+            cy.get("#blogList").contains("Test Every Angle").parent().as("blog2Div");
+            cy.get("@blog2Div").contains("show").click();
+            cy.get("@blog2Div").contains("like").click().click();
+            cy.get("@blog2Div").get(".blogLikes").contains("Likes: 2");
+
+            // the first blog should be at the top right now
+            cy.get("#blogList .blogItem").eq(0).should("contain", "Cypress Guarantees Perfection");
+
+            // add two more likes to the second blog, which will move it to the top
+            cy.get("@blog2Div").contains("like").click().click();
+            cy.get("@blog2Div").get(".blogLikes").contains("Likes: 4");
+
+            // the second blog should be at the top now
+            cy.get("#blogList .blogItem").eq(0).should("contain", "Test Every Angle");
         });
     });
 });
