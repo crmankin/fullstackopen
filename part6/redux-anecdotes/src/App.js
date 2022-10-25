@@ -5,9 +5,9 @@ const App = () => {
   return (
     <div>
       <AnecdoteList />
-      <AnecdoteForm />
+      
     </div>
   )
 }
-
+/*<AnecdoteForm />*/
 export default App
