@@ -4,7 +4,10 @@ import { setNotification, clearNotification } from '../store/notificationStore'
 
 const AnectdoteList = () => {
   const dispatch = useDispatch()
-  const anecdotes = useSelector(state => [...state.anecdotes].sort((a, b) => b.votes - a.votes))
+  const filter = useSelector(state => state.filter)
+  const shownAnecdotes = useSelector(state => filter ? state.anecdotes.filter(a => a.content.toLowerCase().includes(filter.toLowerCase())) : [...state.anecdotes])
+  shownAnecdotes.sort((a, b) => b.votes - a.votes)
+  
 
   const vote = (id) => {
     dispatch(voteForAnecdote(id))
@@ -15,7 +18,7 @@ const AnectdoteList = () => {
   return (
     <div>
       <h2>Anecdotes</h2>
-      {anecdotes.map(anecdote =>
+      {shownAnecdotes.map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}

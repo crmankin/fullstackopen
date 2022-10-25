@@ -4,18 +4,17 @@ import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
 import anecdoteStore from './store/anecdoteStore'
 import notificationStore from './store/notificationStore'
+import filterStore from './store/filterStore'
 import App from './App'
 
 
 const store = configureStore({
   reducer: {
     anecdotes: anecdoteStore,
-    notifications: notificationStore
+    notifications: notificationStore,
+    filter: filterStore
   }
 })
-
-console.log(store.getState())
-
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <App />
