@@ -11,7 +11,7 @@ import App from './App'
 const store = configureStore({
   reducer: {
     anecdotes: anecdoteStore,
-    notifications: notificationStore,
+    notification: notificationStore,
     filter: filterStore
   }
 })
