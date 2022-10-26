@@ -5,10 +5,10 @@ const anecdoteSlice = createSlice({
   name: 'anecdotes',
   initialState: [],
   reducers: {
-    voteForAnecdote(state, action) {
-      const id = action.payload
-      const anecdoteToUpdate = state.find(a => a.id === id)
-      anecdoteToUpdate.votes += 1
+    updateAnecdote(state, action) {
+      const updatedAnecdote = action.payload
+      const idx = state.findIndex(a => a.id === updatedAnecdote.id)
+      state[idx] = updatedAnecdote;
     },
     appendAnecdote(state, action) {
       state.push(action.payload)
@@ -19,7 +19,7 @@ const anecdoteSlice = createSlice({
   }
 })
 
-export const { voteForAnecdote, appendAnecdote, setAnecdotes } = anecdoteSlice.actions
+export const { updateAnecdote, appendAnecdote, setAnecdotes } = anecdoteSlice.actions
 
 export const initializeAnecdotes = () => {
   return async dispatch => {
@@ -35,5 +35,16 @@ export const createAnecdote = (content) => {
   }
 }
 
+export const voteForAnecdote = (id) => {
+  return async (dispatch, getState) => {
+    const anecdote = getState().anecdotes.find(a => a.id === id)
+    const anecdoteForUpdate = {
+      ...anecdote,
+      votes: anecdote.votes + 1
+    }
+    const savedAnecdote = await anecdotesService.update(anecdoteForUpdate)
+    dispatch(updateAnecdote(savedAnecdote))
+  }
+}
 
 export default anecdoteSlice.reducer
