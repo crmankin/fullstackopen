@@ -1,0 +1,10 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNybWFua2luIiwiaWQiOiI2MzQ4MWYxMzdhNzI4YjEyMTE0NDMyNmQiLCJpYXQiOjE2Njg2ODk3ODV9.iaETG1yltr-64vqzcszObbROGvpB0rpHmMoSGU8PPaQ
+
+{
+    "title": "Building a Node app from scratch",
+    "author": "crmankin",
+    "url": "https://fullstackopen.com/en/",
+    "likes": 0
+}

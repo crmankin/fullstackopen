@@ -1,0 +1,55 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  margin: 10px;
+}
+
+#notification {
+  margin: 1.5em;
+  padding: 0.5em;
+  font-weight: bold;
+  border: 2px solid transparent;
+  opacity: 0;
+  transition: 0.5s linear;
+}
+
+#notification.error {
+  color: red;
+  border: 2px solid red;
+  opacity: 1;
+}
+
+#notification.success {
+  color: green;
+  border: 2px solid green;
+  opacity: 1;
+}
+
+.blogItem {
+  border: 1px solid #ccc;
+  margin: 2px;
+  padding: 6px;
+  border-radius: 1em;
+}
+
+.blogTitle {
+  font-weight: bold;
+  font-variant: small-caps;
+  display: inline-block;
+  margin: 3px;
+}
+
+.blogAuthor {
+  font-size: 0.9em;
+  font-weight: lighter;
+  font-style: italic;
+  display: inline-block;
+  margin: 3px;
+}
